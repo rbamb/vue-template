@@ -1,52 +1,18 @@
 <template>
   <div class="root">
-    <div class="button-group" style="margin-bottom: 20px">
-      <el-button type="primary" icon="el-icon-plus" @click="addTypeDialogVisible = true">新增类型</el-button>
-      <el-button type="danger" icon="el-icon-delete">删除</el-button>
-    </div>
-    <el-dialog title="新事件" :visible.sync="addTypeDialogVisible" width="600px">
-      <el-form :model="form" label-width="120px" style="width: 60%; margin-left: 15%; margin-right: 30%">
-        <el-form-item label="灾害类型">
-          <el-input v-model="form.type" autocomplete="off"/>
-        </el-form-item>
-        <el-form-item>
-          <el-button @click="addTypeDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addEventType">添 加</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
-
-    <el-dialog title="请输入新名称" :visible.sync="editDialogVisible" width="600px">
-      <el-form :model="form" label-width="120px" style="width: 60%; margin-left: 15%; margin-right: 30%">
-        <el-form-item label="">
-          <el-input v-model="inputName" autocomplete="off"/>
-        </el-form-item>
-        <el-form-item>
-          <el-button @click="editDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="editName">修 改</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
-
-    <el-tree
-        :data="treeData"
-        node-key="id"
-        default-expand-all
-        :expand-on-click-node="false"
-        :render-content="renderContent"
-        @node-click="handleNodeClick"
-        style="margin-right: 80%;"
-    >
-    </el-tree>
-
+    <emergency/>
   </div>
 </template>
 
 <script>
 import { events, addType } from '@/data/event/event'
+import Emergency from '@/views/event/Emergency'
 
 export default {
   name: 'Event',
+  components: {
+    Emergency,
+  },
   data() {
     return {
       addTypeDialogVisible: false,
