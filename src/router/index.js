@@ -103,7 +103,7 @@ export const constantRoutes = [
         }
       },
       {
-        path: '/event',
+        path: 'event',
         name: 'event',
         component: () => import('@/views/event/index'),
         meta: {

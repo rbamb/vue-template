@@ -1,29 +1,41 @@
 <template>
   <div class="root">
     <div class="button-group" style="margin-bottom: 20px">
-      <el-button type="primary" icon="el-icon-plus" @click="addTypeDialogVisible = true">新增类型</el-button>
+      <el-button type="primary" icon="el-icon-plus" @click="addDialogVisible = true">新增</el-button>
       <el-button type="danger" icon="el-icon-delete">删除</el-button>
     </div>
-    <el-dialog title="新事件" :visible.sync="addTypeDialogVisible" width="600px">
+    <el-dialog title="新事件" :visible.sync="addDialogVisible" width="600px">
       <el-form :model="form" label-width="120px" style="width: 60%; margin-left: 15%; margin-right: 30%">
         <el-form-item label="灾害类型">
           <el-input v-model="form.type" autocomplete="off"/>
         </el-form-item>
+        <el-form-item label="灾害名称">
+          <el-input v-model="form.name" autocomplete="off"/>
+        </el-form-item>
+        <el-form-item label="灾害等级">
+          <el-input v-model="form.level" autocomplete="off"/>
+        </el-form-item>
+        <el-form-item label="灾害编号">
+          <el-input v-model="form.number" autocomplete="off"/>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="form.memo" autocomplete="off"/>
+        </el-form-item>
         <el-form-item>
-          <el-button @click="addTypeDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addEventType">添 加</el-button>
+          <el-button @click="addDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addEvent()">添 加</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
 
-    <el-dialog title="请输入新名称" :visible.sync="editDialogVisible" width="600px">
+    <el-dialog title="edit" :visible.sync="editDialogVisible" width="600px">
       <el-form :model="form" label-width="120px" style="width: 60%; margin-left: 15%; margin-right: 30%">
-        <el-form-item label="">
-          <el-input v-model="inputName" autocomplete="off"/>
+        <el-form-item label="名称">
+          <el-input v-model="form.inputName" autocomplete="off"/>
         </el-form-item>
         <el-form-item>
           <el-button @click="editDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="editName">修 改</el-button>
+          <el-button type="primary" @click="editEvent">修 改</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -33,8 +45,8 @@
         node-key="id"
         default-expand-all
         :expand-on-click-node="false"
+        @node-click="editNodeName"
         :render-content="renderContent"
-        @node-click="handleNodeClick"
         style="margin-right: 80%;"
     >
     </el-tree>
@@ -43,29 +55,24 @@
 </template>
 
 <script>
-import { events, addType } from '@/data/event/event'
+import { events, add } from '@/data/event/event'
 
 export default {
   name: 'Event',
   data() {
     return {
-      addTypeDialogVisible: false,
+      addDialogVisible: false,
       editDialogVisible: false,
-      addLevelDialogVisible: false,
-      id: 1000,
-      inputName: "",
+      appendDialogVisible: false,
       treeData: [],
-      chosenNode: {
-        id: "",
-        label: "",
-        children: []
-      },
+      appendName: '',
       form: [{
         type: '',
         name: '',
         level: '',
         number: '',
-        memo: ''
+        memo: '',
+        inputName: ''
       }],
       defaultProps: {
         children: 'children',
@@ -85,25 +92,21 @@ export default {
     this.getTemplateList()
   },
   methods: {
-    editName() {
-      this.chosenNode.label = this.inputName
-      this.editDialogVisible = false
-      this.inputName = ""
-    },
-    handleNodeClick(data, node, comp) {
+    editNodeName(data, node, component) {
+      console.log(data)
       this.editDialogVisible = true
-      this.chosenNode.id = data.id
-      this.chosenNode.label = data.label
-      this.chosenNode.children = data.children
-      console.log(node)
+      this.form.inputName = data.label
     },
-    addEventType() {
-      addType(this.form.type)
-      this.addTypeDialogVisible = false
+    appendEvent() {
+      this.appendName = this.form.inputName
       this.clearForm()
+      this.appendDialogVisible = false
     },
     append(data) {
-      const newChild = { id: this.id++, label: 'empty', children: [] }
+      const newChild = {
+        label: '',
+        children: []
+      }
       if (!data.children) {
         this.$set(data, 'children', [])
       }
@@ -115,15 +118,21 @@ export default {
       const index = children.findIndex(d => d.id === data.id)
       children.splice(index, 1)
     },
+    handleAppend(data) {
+      this.appendDialogVisible = true
+      this.appendData = data
+    },
     renderContent(h, { node, data, store }) {
       return (
           <span class="custom-tree-node">
-            <span>{node.label}</span>
-            <span>
-              <el-button plain size="mini" type="primary" icon="el-icon-edit"
-                         on-click={() => this.append(data)}/>
-              <el-button plain size="mini" type="danger" icon="el-icon-delete"
-                         on-click={() => this.remove(node, data)}/>
+            <span>{ node.label }</span>
+            <span class="node-button">
+              <el-button size="mini" plain type="primary" icon="el-icon-plus"
+                         on-click={ () => this.append(data) }
+              />
+            <el-button size="mini" plain type="danger" icon="el-icon-delete"
+                       on-click={ () => this.remove(node, data) }
+            />
             </span>
           </span>)
     },
@@ -133,6 +142,16 @@ export default {
       this.form.level = ''
       this.form.number = ''
       this.form.memo = ''
+      this.form.inputName = ''
+    },
+    addEvent() {
+      add(this.form)
+      this.$message.success('添加成功！')
+      this.clearForm()
+      this.addDialogVisible = false
+    },
+    imgClick(imgUrl) {
+      this.srcList = [imgUrl]
     },
     getTemplateList() {
       this.treeData = events
@@ -265,4 +284,6 @@ export default {
   padding-right: 8px;
 }
 
+.node-button {
+}
 </style>
