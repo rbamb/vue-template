@@ -48,7 +48,8 @@
         :expand-on-click-node="false"
         @node-click="editNodeName"
         :render-content="renderContent"
-        style="margin-right: 80%;">
+        style="margin-right: 80%;"
+    >
     </el-tree>
 
   </div>
@@ -72,7 +73,7 @@ export default {
         level: '',
         number: '',
         memo: '',
-        inputName: '',
+        inputName: ''
       }],
       defaultProps: {
         children: 'children',
@@ -103,17 +104,20 @@ export default {
       this.appendDialogVisible = false
     },
     append(data) {
-      const newChild = { label: this.appendName, children: [] };
-      if (!data.children) {
-        this.$set(data, 'children', []);
+      const newChild = {
+        label: '',
+        children: []
       }
-      data.children.push(newChild);
+      if (!data.children) {
+        this.$set(data, 'children', [])
+      }
+      data.children.push(newChild)
     },
     remove(node, data) {
-      const parent = node.parent;
-      const children = parent.data.children || parent.data;
-      const index = children.findIndex(d => d.id === data.id);
-      children.splice(index, 1);
+      const parent = node.parent
+      const children = parent.data.children || parent.data
+      const index = children.findIndex(d => d.id === data.id)
+      children.splice(index, 1)
     },
     handleAppend(data) {
       this.appendDialogVisible = true
@@ -122,14 +126,14 @@ export default {
     renderContent(h, { node, data, store }) {
       return (
           <span class="custom-tree-node">
-            <span>{node.label}</span>
+            <span>{ node.label }</span>
             <span class="node-button">
-              <el-button size="mini" plain type="success" icon="el-icon-plus"
-                         on-click={() => this.append(data)}
+              <el-button size="mini" plain type="primary" icon="el-icon-plus"
+                         on-click={ () => this.append(data) }
               />
             <el-button size="mini" plain type="danger" icon="el-icon-delete"
-                       on-click={() =>
-                           this.remove(node, data)}/>
+                       on-click={ () => this.remove(node, data) }
+            />
             </span>
           </span>)
     },
@@ -143,7 +147,7 @@ export default {
     },
     addEvent() {
       add(this.form)
-      this.$message.success("添加成功！")
+      this.$message.success('添加成功！')
       this.clearForm()
       this.addDialogVisible = false
     },

@@ -31,39 +31,29 @@ import Layout from '@/layout'
  * all roles can be accessed
  */
 export const constantRoutes = [
-  {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
-  {
-    path: '/',
-    // redirect: "/login",
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
-  {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
-  },
-  {
-    path: '/main',
-    component: Layout,
-    redirect: '/main/upload',
-    meta: {
-      title: '环保应急管理系统',
-      icon: 'plane'
-    },
+  { path: '/login', component: () => import('@/views/login/index'), hidden: true },
+  { path: '/', component: () => import('@/views/login/index'), hidden: true },
+  { path: '/404', component: () => import('@/views/404'), hidden: true },
+  { path: '/admin', component: Layout,
+    meta: { title: "系统管理员", icon: 'plane', },
     children: [
-      {
-        path: 'staff',
-        name: 'staff',
-        component: () => import('@/views/staff/index'),
+      { path: 'staff', name: 'staff', component: () => import('@/views/staff/index'),
         meta: {
           title: '人员维护'
         }
       },
+    ],
+    hidden: true,
+  },
+  {
+    path: '/worker',
+    component: Layout,
+    meta: {
+      title: "工作人员",
+      icon: 'plane',
+    },
+    hidden: true,
+    children: [
       {
         path: 'supply',
         name: 'supply',
@@ -127,7 +117,17 @@ export const constantRoutes = [
         meta: {
           title: '接报维护 (工作人员)'
         }
-      },
+      }
+    ]
+  },
+  {
+    path: '/director',
+    component: Layout,
+    meta: {
+      title: "指挥人员",
+      icon: 'plane'
+    },
+    children: [
       {
         path: 'report-director',
         name: 'report-director',
@@ -136,6 +136,17 @@ export const constantRoutes = [
           title: '接报维护 (指挥人员)'
         }
       },
+    ],
+    hidden: true,
+  },
+  {
+    path: '/expert',
+    component: Layout,
+    meta: {
+      title: "专家",
+      icon: "plane"
+    },
+    children: [
       {
         path: 'report-expert',
         name: 'report-expert',
@@ -144,9 +155,9 @@ export const constantRoutes = [
           title: '接报维护 (专家)'
         }
       }
-    ]
+    ],
+    hidden: true
   },
-
   //测试页面
   /*{
     path: '/',

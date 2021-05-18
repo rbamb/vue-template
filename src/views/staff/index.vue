@@ -205,7 +205,7 @@ export default {
       this.tableData = users
     },
     editUser() {
-      const id = this.form.id - 1;
+      const id = this.form.id
       users[id].name = this.form.name;
       users[id].username = this.form.username;
       users[id].password = this.form.password;

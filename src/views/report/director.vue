@@ -3,6 +3,7 @@
     <el-row>
       <el-col :span="8">
         <el-button type="success" icon="el-icon-check" @click="finishReports">完成处理</el-button>
+        <el-button type="danger" icon="el-icon-close" @click="denyReports">驳回申请</el-button>
         <el-button type="warning" icon="el-icon-upload2" @click="submitReports">提交上级</el-button>
         <!--
           添加接报
@@ -140,6 +141,7 @@
 
 <script>
 import { stringToDate, dateToString } from '../../utils/time'
+import { reports } from '@/data/report/reports'
 import { queryReportById, queryReportsByBlur, submitted } from '@/data/report/submitted'
 import { queryDifficultiesByBlur, queryDifficultyById, difficulties } from '@/data/report/difficulty'
 
@@ -174,6 +176,17 @@ export default {
       }
       this.deleteReportsSilently()
       this.$message.success('提交成功！')
+    },
+    denyReports() {
+      if (this.selection.length === 0) {
+        this.$message.error('您尚未选择需驳回的接报！')
+        return
+      }
+      for(let s of this.selection) {
+        reports.push(s)
+      }
+      this.deleteReportsSilently()
+      this.$message.success('已驳回！')
     },
     deleteReportsSilently() {
       if (this.selection.length === 0) {

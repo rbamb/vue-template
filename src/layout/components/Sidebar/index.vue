@@ -11,7 +11,7 @@
         :active-text-color="variables.menuActiveText"
         :collapse-transition="false"
         mode="vertical">
-        <sidebar-item v-for="route in routes" :display="true" :key="route.path" :item="route"
+        <sidebar-item v-for="route in routes" :key="route.path" :item="route"
                       :base-path="route.path" />
       </el-menu>
     </el-scrollbar>
@@ -26,11 +26,31 @@ import variables from '@/styles/variables.scss'
 
 export default {
   components: { SidebarItem, Logo },
+  methods: {
+    translate(type) {
+      switch (type) {
+        case "系统管理员":
+          return "admin"
+        case "工作人员":
+          return "worker"
+        case "指挥人员":
+          return "director"
+        case "专家":
+          return "expert"
+      }
+      return null
+    },
+  },
   computed: {
     ...mapGetters([
       'sidebar'
     ]),
     routes() {
+      for (let r of this.$router.options.routes) {
+        if (r.path.substr(1) === this.translate(this.$store.getters.getLoginUser.type)) {
+          r.hidden = false
+        }
+      }
       return this.$router.options.routes
     },
     activeMenu() {
@@ -50,7 +70,7 @@ export default {
     },
     isCollapse() {
       return !this.sidebar.opened
-    }
+    },
   }
 }
 </script>

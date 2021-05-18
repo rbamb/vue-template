@@ -276,7 +276,7 @@ export default {
         type: this.form.type,
         reporter: this.form.reporter,
         phone: this.form.phone,
-        reportTime: this.form.reportTime,
+        reportTime: dateToString(this.form.reportTime),
         company: this.form.company,
         lastModifier: this.form.lastModifier,
         lastModifiedTime: dateToString(new Date()),

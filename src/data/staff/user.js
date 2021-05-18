@@ -32,12 +32,13 @@ export let users = [
 ]
 
 export function queryUserByUsername(username) {
-  for (let i = 0; i < users.length; i++) {
-    if (users[i].username === username) {
-      return users[i]
+  for (let user of users) {
+    if (user.username === username) {
+      console.log("user: " + user)
+      return user
     }
-    return null
   }
+  return null
 }
 
 function contains(key, val) {

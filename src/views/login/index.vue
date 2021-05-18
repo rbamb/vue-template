@@ -136,21 +136,18 @@ export default {
         return
       }
       this.$message.success("登录成功！")
-      // TODO finish different user's main page
       if (query.type === "系统管理员") {
-        console.log("before: " + this.$route.path)
-        this.$router.push({
-          path: "/main/staff", query: {username: query.username}})
-        console.log("after: " + this.$route.path)
+        this.$store.commit("changeLoginUser", query)
+        this.$router.push({path: "/admin/staff"})
       } else if (query.type === "工作人员") {
-        this.$router.push({
-          path: "/main/", query: {username: query.username}})
+        this.$store.commit("changeLoginUser", query)
+        this.$router.push({path: "/worker/report-worker"})
       } else if (query.type === "指挥人员") {
-        this.$router.push({
-          path: "/main/", query: {username: query.username}})
+        this.$store.commit("changeLoginUser", query)
+        this.$router.push({path: "/director/report-director"})
       } else if (query.type === "专家") {
-        this.$router.push({
-          path: "/main/", query: {username: query.username}})
+        this.$store.commit("changeLoginUser", query)
+        this.$router.push({path: "/expert/report-expert"})
       }
     },
   }

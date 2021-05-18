@@ -6,7 +6,7 @@
 
     <el-menu default-active="1" class="right-menu el-menu-demo" mode="horizontal">
       <el-submenu index="1">
-        <template slot="title">{{ this.$route.query.username }}</template>
+        <template slot="title">{{ username }}</template>
         <el-menu-item index="1" @click="logout">退出登录</el-menu-item>
       </el-submenu>
     </el-menu>
@@ -23,28 +23,40 @@ export default {
     Breadcrumb,
     Hamburger
   },
+  data () {
+    return {
+      username: this.$store.getters.getLoginUser.username,
+      nullUser: {
+        id: "",
+        name: "",
+        age: "",
+        username: "",
+        password: "",
+        type: "",
+        gender: "",
+        birthYear: "",
+        status: "",
+      }
+    }
+  },
   computed: {
     ...mapGetters([
       'sidebar',
       'avatar'
-    ])
-  },
-  data() {
-    return {
-      username: "",
-    }
+    ]),
   },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      // localStorage.removeItem('hasLogin')
-      // this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-      console.log("bar: before = " + this.$route.path)
-      this.$route.query.username = ''
+      for (let r of this.$router.options.routes) {
+        if (r.hidden === false) {
+          r.hidden = true
+        }
+      }
+      this.$store.commit("changeLoginUser", this.nullUser)
       this.$router.replace("/login")
-      console.log("bar: after = " + this.$route.path)
     }
   }
 }

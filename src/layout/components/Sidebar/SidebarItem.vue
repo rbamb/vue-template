@@ -30,6 +30,7 @@ import { isExternal } from '@/utils/validate'
 import Item from './Item'
 import AppLink from './Link'
 import FixiOSBug from './FixiOSBug'
+import { queryPermission } from '@/data/role'
 
 export default {
   name: 'SidebarItem',
@@ -49,10 +50,6 @@ export default {
       type: String,
       default: ''
     },
-    display: {
-      type: Boolean,
-      default: false
-    }
   },
   data() {
     // To fix https://github.com/PanJiaChen/vue-admin-template/issues/237
